@@ -11,7 +11,6 @@ namespace MS.Reflection{
     /// </summary>
     public static class CachedCallArguementsTypeRegister{
         private static HashSet<System.Type> _supportCacheCallType = new HashSet<Type>();
-
         private static void Ensure ( Action action )
         {
             if ( IsFalse ( ) )
@@ -65,6 +64,7 @@ namespace MS.Reflection{
             }
         }
 
+
         public static bool IsCallSupport(params System.Type[] types){
             if(types.Length > 4){
                 return false;
@@ -81,6 +81,77 @@ namespace MS.Reflection{
             var cachedCallType = CachedCallFactory.MakeCachedCallGenericType(types);
             return _supportCacheCallType.Contains(cachedCallType);
         }
+
+
+        public static void EnsureFunc<TReturn>(){
+            Ensure(()=>{
+                var a = new CachedFunc<TReturn>(null,null);
+            });
+            var tp = typeof(CachedFunc<TReturn>);
+            if(!_supportCacheCallType.Contains(tp)){
+                _supportCacheCallType.Add(tp);
+            }
+        }
+
+
+        public static void EnsureFunc<T0,TReturn>(){
+            Ensure(()=>{
+                var a = new CachedFunc<T0,TReturn>(null,null);
+            });
+            var tp = typeof(CachedFunc<T0,TReturn>);
+            if(!_supportCacheCallType.Contains(tp)){
+                _supportCacheCallType.Add(tp);
+            }
+        }
+
+        public static void EnsureFunc<T0,T1,TReturn>(){
+            Ensure(()=>{
+                var a = new CachedFunc<T0,T1,TReturn>(null,null);
+            });
+            var tp = typeof(CachedFunc<T0,T1,TReturn>);
+            if(!_supportCacheCallType.Contains(tp)){
+                _supportCacheCallType.Add(tp);
+            }
+        }
+
+        public static void EnsureFunc<T0,T1,T2,TReturn>(){
+            Ensure(()=>{
+                var a = new CachedFunc<T0,T1,T2,TReturn>(null,null);
+            });
+            var tp = typeof(CachedFunc<T0,T1,T2,TReturn>);
+            if(!_supportCacheCallType.Contains(tp)){
+                _supportCacheCallType.Add(tp);
+            }
+        }
+
+        public static void EnsureFunc<T0,T1,T2,T3,TReturn>(){
+            Ensure(()=>{
+                var a = new CachedFunc<T0,T1,T2,T3,TReturn>(null,null);
+            });
+            var tp = typeof(CachedFunc<T0,T1,T2,T3,TReturn>);
+            if(!_supportCacheCallType.Contains(tp)){
+                _supportCacheCallType.Add(tp);
+            }
+        }
+
+        public static bool IsFuncSupport(System.Type returnType, params System.Type[] types){
+            if(types.Length > 4){
+                return false;
+            }
+            var hasValueType = returnType.IsValueType;
+            foreach(var tp in types){
+                if(tp.IsValueType){
+                    hasValueType = true;
+                }
+            }
+            if(!hasValueType){
+                return true;
+            }
+            var cachedFuncType = CachedCallFactory.MakeCachedFuncGenericType(types,returnType);
+            return _supportCacheCallType.Contains(cachedFuncType);
+        }
+
+
 
         private static bool s_alwaysFalse = DateTime.UtcNow.Year < 0;
 
